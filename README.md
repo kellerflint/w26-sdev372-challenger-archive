@@ -26,4 +26,3 @@ time you ever go against them in the future
 - **User Flows:** User logs in -> Picks their prefered sport ->
 - (if they picked mma) weight class estimate, height estimate, wins/losses,
 strength/weaknesses
-- (if they picked po
