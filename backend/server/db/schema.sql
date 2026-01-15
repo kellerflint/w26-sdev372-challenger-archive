@@ -20,7 +20,8 @@ CREATE TABLE mmaMatches (
     dodges INT,
     blocks INT,
     notes VARCHAR(300), 
-    FOREIGN KEY (opponentId) REFERENCES Persons(fighterId)
+    opponentId INT,
+    FOREIGN KEY (opponentId) REFERENCES mmaFighters(fighterId)
 );
 
 CREATE TABLE poolGames(
@@ -30,6 +31,7 @@ CREATE TABLE poolGames(
     shotPot INT,
     errors INT,
     effSafety INT,
+    opponentId INT,
     FOREIGN KEY (opponentId) REFERENCES poolPlayers(playerId)
 );
 
