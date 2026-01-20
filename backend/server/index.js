@@ -1,5 +1,5 @@
 import express from 'express'
-
+import sequelize from './db/db.js';
 
 import matchesRouter from './routes/matchesRouter.js'
 import playerRouter from './routes/playerRouter.js'
