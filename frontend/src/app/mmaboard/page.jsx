@@ -1,10 +1,10 @@
-import Header from "./Components/Header";
+import Header from "../Components/Header";
 
 export default function Home() {
   return (
     <>
       <Header />
-      <h1>Challenger Archive</h1>
+      <h1>MMABoard</h1>
     </>
   );
 }

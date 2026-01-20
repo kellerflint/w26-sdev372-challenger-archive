@@ -1,7 +1,10 @@
-import Image from "next/image";
+import Header from "../Components/Header";
 
 export default function Home() {
   return (
-    <h1>PoolBoard</h1>
+    <>
+      <Header />
+      <h1>PoolBoard</h1>
+    </>
   );
 }
