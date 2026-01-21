@@ -4,7 +4,7 @@ import { playerController } from '../controllers/playerController.js'
 const router = express.Router();
 
 export default () => {
-    router.get("/player", playerController);
+    router.get("/", playerController);
     return router;
   };
 

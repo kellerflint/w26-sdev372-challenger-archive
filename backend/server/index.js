@@ -8,8 +8,8 @@ const app = express();
 const PORT = 3000;
 //const PORT = process.env.PORT;
 
-app.use("/", matchesRouter());       
-app.use("/", playerRouter());   
+app.use("/matches", matchesRouter());       
+app.use("/player", playerRouter());   
 
 
 app.listen(PORT, () => {
