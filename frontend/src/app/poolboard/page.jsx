@@ -6,10 +6,12 @@ export default function Home() {
     <>
       <Header />
       <h1>PoolBoard</h1>
+      <div class="match-cards-list">
       <PoolCard />
       <PoolCard />
       <PoolCard />
       <PoolCard />
+      </div>
     </>
   );
 }
