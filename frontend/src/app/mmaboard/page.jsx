@@ -6,10 +6,12 @@ export default function Home() {
     <>
       <Header />
       <h1>MMABoard</h1>
+      <div class="match-cards-list">
       <MMACard />
       <MMACard />
       <MMACard />
       <MMACard />
+      </div>
     </>
   );
 }
