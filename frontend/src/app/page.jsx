@@ -1,7 +1,6 @@
 import Header from "./Components/Header";
 import Image from "next/image";
 import moneyGif from "./../../public/money.gif"
-
 export default async function Home() {
 
   const res = await fetch("http://localhost:3001/");
