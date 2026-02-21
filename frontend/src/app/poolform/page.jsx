@@ -1,3 +1,5 @@
+"use client";
+
 import Header from "../Components/Header";
 
 export default function Home() {
@@ -30,7 +32,7 @@ export default function Home() {
     <>
       <Header />
       <h1>Pool Form</h1>
-      <form action={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <div class="player-form-div">
             <div class="player-form">
             <p>Player One</p>

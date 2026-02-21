@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Header from "../Components/Header";
 
-export default async function Home() {
+export default function Home() {
   const [matches, setMatches] = useState(null);
   const [stats, setStats] = useState(null);
 
