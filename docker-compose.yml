@@ -7,7 +7,7 @@ services:
       MYSQL_USER: snguru
       MYSQL_PASSWORD: MbE62o3mB
     ports:
-      - "3306:3306"
+      - "3310:3306"
     volumes:
       - db_data:/var/lib/mysql
 
