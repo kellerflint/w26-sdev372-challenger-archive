@@ -1,5 +1,4 @@
 import express from 'express'
-// import sequelize from './db/db.js';
 import cors from 'cors'
 
 
@@ -10,8 +9,8 @@ const app = express();
 const PORT = 3001;
 
 app.use(cors());
-// app.use("/matches", matchesRouter());       
-// app.use("/players", playerRouter());   
+app.use("/matches", matchesRouter());
+app.use("/players", playerRouter());
 
 app.get("/", (req, res) => {
     fetch("https://www.thesportsdb.com/api/v2/examples/all_sports.json", {

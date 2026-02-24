@@ -29,11 +29,11 @@ CREATE TABLE IF NOT EXISTS mmaMatches (
 
 CREATE TABLE IF NOT EXISTS poolGames(
     gameId INT AUTO_INCREMENT PRIMARY KEY,
-    matchPlayers VARCHAR(100) NOT NULL,
+    playerId INT NOT NULL,
     shotAtt INT,
     shotPot INT,
     errors INT,
     effSafety INT,
     opponentId INT,
-    FOREIGN KEY (opponentId) REFERENCES poolPlayers(playerId)
+    FOREIGN KEY (playerId) REFERENCES poolPlayers(playerId)
 );

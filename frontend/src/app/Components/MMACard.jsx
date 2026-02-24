@@ -8,7 +8,7 @@ export default function MMACard() {
             <div>
               <p>01.22.2026 - 5:12pm</p>
               <p>Kent, WA</p>
-              <Link href="/mmamatch" class="view-notes-link"><p>View Notes</p></Link>
+              <Link href="/mmamatch" className="view-notes-link"><p>View Notes</p></Link>
               {/* CREATE API "/mmamatch:id" to find pool match by ID */}
             </div>
           </div>
