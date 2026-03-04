@@ -2,15 +2,25 @@ import db from "../db/db.js";
 import { QueryTypes } from "sequelize";
 
 export async function postPool(req, res) {
-  console.log("REQUEST BODY:", req.body);
 
-  const { playerOne, playerTwo } = req.body;
+  const playerOne = req.body.playerOne;
+  const playerTwo = req.body.playerTwo;
+
+  // ===== VALIDATION =====
+  if (!playerOne || !playerOne.name) {
+    return res.status(400).json({ error: "Player One name is required" });
+  }
+
+  if (!playerTwo || !playerTwo.name) {
+    return res.status(400).json({ error: "Player Two name is required" });
+  }
+
+  const playerOneName = playerOne.name.trim();
+  const playerTwoName = playerTwo.name.trim();
 
   try {
-    // ================= PLAYER ONE =================
-    const playerOneName = playerOne?.name?.trim();
-    console.log("PLAYER ONE NAME:", playerOneName);
 
+    // ================= PLAYER ONE =================
     const p1 = await db.query(
       "SELECT playerId FROM poolPlayers WHERE firstName = ?",
       {
@@ -36,9 +46,6 @@ export async function postPool(req, res) {
     }
 
     // ================= PLAYER TWO =================
-    const playerTwoName = playerTwo?.name?.trim();
-    console.log("PLAYER TWO NAME:", playerTwoName);
-
     const p2 = await db.query(
       "SELECT playerId FROM poolPlayers WHERE firstName = ?",
       {
@@ -95,8 +102,8 @@ export async function postPool(req, res) {
 
     res.status(201).json({ message: "Game saved" });
 
-  } catch (err) {
-    console.error("POST POOL ERROR:", err);
+  } catch (error) {
+    console.error("POST POOL ERROR:", error);
     res.status(500).json({ error: "Failed to save game" });
   }
 }

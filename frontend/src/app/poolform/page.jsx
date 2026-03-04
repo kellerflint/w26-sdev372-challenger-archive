@@ -29,10 +29,7 @@ export default function Home() {
             playerOne: playerOne,
             playerTwo: playerTwo,
         }
-        console.log(data);
-        // have this page submit a POST request to poolGames
 
-        // return data;
         await fetch("http://localhost:3001/players/poolGames", {
             method: "POST",
             headers: {
@@ -40,42 +37,33 @@ export default function Home() {
             },
             body: JSON.stringify(data),
         });
+
+        alert("Pool Match Saved!");
     }
     return (
         <>
             <Header />
-            <h1>Pool Form</h1>
+            <h1>PoolForm</h1>
             <form onSubmit={handleSubmit}>
-                <div class="player-form-div">
-                    <div class="player-form">
-                        <p>Player One</p>
-                        <label for="playerone">Name: </label>
-                        <input type="text" id="playerone" name="playerone"></input>
-                        <label for="playeronescore">Score: </label>
-                        <input type="number" id="playeronescore" name="playeronescore"></input>
-                        <label>Made Balls</label>
-                        <input type="number" id="playeronemade" name="playeronemade"></input>
-                        <label>Attempted Balls</label>
-                        <input type="number" id="playeroneatt" name="playeroneatt"></input>
-                        <label>Errors</label>
-                        <input type="number" id="playeroneerr" name="playeroneerr"></input>
-                        <label>Safeties</label>
-                        <input type="number" id="playeronesafe" name="playeronesafe"></input>
+                <div className="player-form-div">
+                    <div className="player-form">
+                        <h3>Player One</h3>
+                        <input name="playerone" placeholder="Name" />
+                        <input name="playeronescore" type="number" placeholder="Score" />
+                        <input name="playeronemade" type="number" placeholder="Made Balls" />
+                        <input name="playeroneatt" type="number" placeholder="Attempted Balls" />
+                        <input name="playeroneerr" type="number" placeholder="Errors" />
+                        <input name="playeronesafe" type="number" placeholder="Safeties" />
                     </div>
-                    <div class="player-form">
-                        <p>Player Two</p>
-                        <label for="playertwo">Name: </label>
-                        <input type="text" id="playertwo" name="playertwo"></input>
-                        <label for="playertwoscore">Score: </label>
-                        <input type="number" id="playertwoscore" name="playertwoscore"></input>
-                        <label>Made Balls</label>
-                        <input type="number" id="playertwomade" name="playertwomade"></input>
-                        <label>Attempted Balls</label>
-                        <input type="number" id="playertwoatt" name="playertwoatt"></input>
-                        <label>Errors</label>
-                        <input type="number" id="playertwoerr" name="playertwoerr"></input>
-                        <label>Safeties</label>
-                        <input type="number" id="playertwosafe" name="playertwosafe"></input>
+
+                    <div className="player-form">
+                        <h3>Player Two</h3>
+                        <input name="playertwo" placeholder="Name" />
+                        <input name="playertwoscore" type="number" placeholder="Score" />
+                        <input name="playertwomade" type="number" placeholder="Made Balls" />
+                        <input name="playertwoatt" type="number" placeholder="Attempted Balls" />
+                        <input name="playertwoerr" type="number" placeholder="Errors" />
+                        <input name="playertwosafe" type="number" placeholder="Safeties" />
                     </div>
                 </div>
                 <button type="submit" className="link-buttons">Submit</button>

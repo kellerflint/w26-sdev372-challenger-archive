@@ -74,7 +74,6 @@ async function adjustWinLoss(winnerId, loserId) {
 }
 
 export async function postPoolMatch(req, res) {
-    console.log("BODY:", req.body);
     try {
         const { playerOne, playerTwo, matchDate, location, notes } = req.body ?? {};
 

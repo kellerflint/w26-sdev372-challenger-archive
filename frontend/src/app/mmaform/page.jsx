@@ -43,26 +43,29 @@ export default function Home() {
       <h1>MMA Form</h1>
 
       <form onSubmit={handleSubmit}>
-
-        <h3>Fighter One</h3>
-        <input name="fighterOneName" placeholder="Name" />
-        <input name="fighterOneHead" type="number" placeholder="Head Hits" />
-        <input name="fighterOneBody" type="number" placeholder="Body Hits" />
-        <input name="fighterOneDodges" type="number" placeholder="Dodges" />
-        <input name="fighterOneBlocks" type="number" placeholder="Blocks" />
-        <input name="fighterOneNotes" placeholder="Notes" />
-
-        <h3>Fighter Two</h3>
-        <input name="fighterTwoName" placeholder="Name" />
-        <input name="fighterTwoHead" type="number" placeholder="Head Hits" />
-        <input name="fighterTwoBody" type="number" placeholder="Body Hits" />
-        <input name="fighterTwoDodges" type="number" placeholder="Dodges" />
-        <input name="fighterTwoBlocks" type="number" placeholder="Blocks" />
-        <input name="fighterTwoNotes" placeholder="Notes" />
-
-        <button type="submit">Submit</button>
-
+        <div class="player-form-div">
+          <div class="player-form">
+            <h3>Fighter One</h3>
+            <input name="fighterOneName" placeholder="Name" />
+            <input name="fighterOneHead" type="number" placeholder="Head Hits" />
+            <input name="fighterOneBody" type="number" placeholder="Body Hits" />
+            <input name="fighterOneDodges" type="number" placeholder="Dodges" />
+            <input name="fighterOneBlocks" type="number" placeholder="Blocks" />
+            <input name="fighterOneNotes" placeholder="Notes" />
+          </div>
+          <div class="player-form">
+            <h3>Fighter Two</h3>
+            <input name="fighterTwoName" placeholder="Name" />
+            <input name="fighterTwoHead" type="number" placeholder="Head Hits" />
+            <input name="fighterTwoBody" type="number" placeholder="Body Hits" />
+            <input name="fighterTwoDodges" type="number" placeholder="Dodges" />
+            <input name="fighterTwoBlocks" type="number" placeholder="Blocks" />
+            <input name="fighterTwoNotes" placeholder="Notes" />
+          </div>
+        </div>
+        <button type="submit" className="link-buttons">Submit</button>
       </form>
+      <Footer />
     </>
   );
 }
