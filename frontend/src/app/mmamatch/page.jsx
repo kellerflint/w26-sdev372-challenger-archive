@@ -9,7 +9,7 @@ export default function Home() {
   const [stats, setStats] = useState(null);
 
   useEffect(() => {
-      fetch("http://localhost:3001/matches")
+      fetch("http://localhost:3001/matches/mmaMatches")
       .then(res => res.json())
       .then(data => setData(data))
       .catch(err => console.error(err));

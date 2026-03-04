@@ -8,7 +8,7 @@ export default function Home() {
   const [stats, setStats] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:3001/players")
+    fetch("http://localhost:3001/players/poolGames")
       .then(res => res.text())
       .then(data => setMatches(data))
       .catch(err => console.error(err));

@@ -3,7 +3,11 @@
 import Header from "../Components/Header";
 
 export default function Home() {
-    function handleSubmit(formData) {
+    async function handleSubmit(e) {
+        e.preventDefault();
+
+        const formData = new FormData(e.target);
+
         const playerOne = {
             name: formData.get("playerone"),
             score: Number(formData.get("playeronescore")),
@@ -27,47 +31,54 @@ export default function Home() {
         console.log(data);
         // have this page submit a POST request to poolGames
 
-        return data;
+        // return data;
+        await fetch("http://localhost:3001/players/poolGames", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        });
     }
-  return (
-    <>
-      <Header />
-      <h1>Pool Form</h1>
-      <form onSubmit={handleSubmit}>
-        <div class="player-form-div">
-            <div class="player-form">
-            <p>Player One</p>
-                <label for="playerone">Name: </label>
-                    <input type="text" id="playerone" name="playerone"></input>
-                <label for="playeronescore">Score: </label>
-                    <input type="number" id="playeronescore" name="playeronescore"></input>
-                <label>Made Balls</label>
-                    <input type="number" id="playeronemade" name="playeronemade"></input>
-                <label>Attempted Balls</label>
-                    <input type="number" id="playeroneatt" name="playeroneatt"></input>
-                <label>Errors</label>
-                    <input type="number" id="playeroneerr" name="playeroneerr"></input>
-                <label>Safeties</label>
-                    <input type="number" id="playeronesafe" name="playeronesafe"></input>
-            </div>
-            <div class="player-form">
-            <p>Player Two</p>
-                <label for="playertwo">Name: </label>
-                    <input type="text" id="playertwo" name="playertwo"></input>
-                <label for="playertwoscore">Score: </label>
-                    <input type="number" id="playertwoscore" name="playertwoscore"></input>
-                <label>Made Balls</label>
-                    <input type="number" id="playertwomade" name="playertwomade"></input>
-                <label>Attempted Balls</label>
-                    <input type="number" id="playertwoatt" name="playertwoatt"></input>
-                <label>Errors</label>
-                    <input type="number" id="playertwoerr" name="playertwoerr"></input>
-                <label>Safeties</label>
-                    <input type="number" id="playertwosafe" name="playertwosafe"></input>
-            </div>
-        </div>
-        <button type="submit">Submit</button>
-      </form>
-    </>
-  );
+    return (
+        <>
+            <Header />
+            <h1>Pool Form</h1>
+            <form onSubmit={handleSubmit}>
+                <div class="player-form-div">
+                    <div class="player-form">
+                        <p>Player One</p>
+                        <label for="playerone">Name: </label>
+                        <input type="text" id="playerone" name="playerone"></input>
+                        <label for="playeronescore">Score: </label>
+                        <input type="number" id="playeronescore" name="playeronescore"></input>
+                        <label>Made Balls</label>
+                        <input type="number" id="playeronemade" name="playeronemade"></input>
+                        <label>Attempted Balls</label>
+                        <input type="number" id="playeroneatt" name="playeroneatt"></input>
+                        <label>Errors</label>
+                        <input type="number" id="playeroneerr" name="playeroneerr"></input>
+                        <label>Safeties</label>
+                        <input type="number" id="playeronesafe" name="playeronesafe"></input>
+                    </div>
+                    <div class="player-form">
+                        <p>Player Two</p>
+                        <label for="playertwo">Name: </label>
+                        <input type="text" id="playertwo" name="playertwo"></input>
+                        <label for="playertwoscore">Score: </label>
+                        <input type="number" id="playertwoscore" name="playertwoscore"></input>
+                        <label>Made Balls</label>
+                        <input type="number" id="playertwomade" name="playertwomade"></input>
+                        <label>Attempted Balls</label>
+                        <input type="number" id="playertwoatt" name="playertwoatt"></input>
+                        <label>Errors</label>
+                        <input type="number" id="playertwoerr" name="playertwoerr"></input>
+                        <label>Safeties</label>
+                        <input type="number" id="playertwosafe" name="playertwosafe"></input>
+                    </div>
+                </div>
+                <button type="submit">Submit</button>
+            </form>
+        </>
+    );
 }
