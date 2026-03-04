@@ -1,13 +1,14 @@
-import express from 'express'
-import { matchesController } from '../controllers/matchesController.js'
-import { calcOddsMma } from '../controllers/calcOddsMma.js';
+import express from "express";
+import { matchesController } from "../controllers/matchesController.js";
+import { calcOddsMma } from "../controllers/calcOddsMma.js";
+import { postMMA } from "../controllers/postMMA.js";
+import { getMmaMatches } from "../controllers/getMmaMatches.js";
 
 const router = express.Router();
 
-export default () => {
-    router.get("/", matchesController);
-    router.get("/oddsMma", calcOddsMma);
-    return router;
-};
+router.get("/", matchesController);
+router.get("/oddsMma", calcOddsMma);
+router.post("/mmaMatches", postMMA);
+router.get("/mmaMatches", getMmaMatches);
 
-  
+export default router;

@@ -1,5 +1,8 @@
 import express from 'express'
 import cors from 'cors'
+import dotenv from "dotenv"
+dotenv.config()
+console.log("DB_USER IS: ", process.env.DB_USER)
 
 
 import matchesRouter from './routes/matchesRouter.js'
@@ -10,8 +13,8 @@ const PORT = 3001;
 
 app.use(cors());
 app.use(express.json());
-app.use("/matches", matchesRouter());
-app.use("/players", playerRouter());
+app.use("/matches", matchesRouter);
+app.use("/players", playerRouter);
 
 app.get("/", (req, res) => {
     fetch("https://www.thesportsdb.com/api/v2/examples/all_sports.json", {
