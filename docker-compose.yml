@@ -8,8 +8,8 @@ services:
       MYSQL_PASSWORD: MbE62o3mB
     ports:
       - "3310:3306"
-    volumes:
-      - db_data:/var/lib/mysql
+    tmpfs:
+      - /var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-P", "3306", "-u", "root", "-pMbE62o3mB"]
       interval: 10s
@@ -38,9 +38,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NEXT_PUBLIC_API_URL: 
+      NEXT_PUBLIC_API_URL: http://backend:3001
     depends_on:
       - backend
 
-volumes:
-  db_data:
