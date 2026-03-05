@@ -2,6 +2,7 @@
 
 import Header from "../Components/Header";
 import Footer from "../Components/Footer"
+import { apiFetch } from "../../lib/api.client";
 
 export default function Home() {
     async function handleSubmit(e) {
@@ -32,7 +33,7 @@ export default function Home() {
             location: formData.get("location"),
         }
 
-        await fetch("http://localhost:3001/pool", {
+        await apiFetch("/pool", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

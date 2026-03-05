@@ -4,12 +4,13 @@ import { useEffect, useState } from "react";
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
 import Link from "next/link";
+import { apiFetch } from "../../lib/api.client";
 
 export default function Home() {
   const [leaders, setLeaders] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:3001/pool/getPoolLeaderboard")
+    apiFetch("/pool/getPoolLeaderboard")
       .then((res) => res.json())
       .then((data) => setLeaders(data))
       .catch((err) => console.error(err));

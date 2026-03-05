@@ -4,12 +4,13 @@ import Header from "../Components/Header";
 import Footer from "../Components/Footer";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { apiFetch } from "../../lib/api.client";
 
 export default function Home() {
   const [leaders, setLeaders] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:3001/mma/getMmaLeaderboard")
+    apiFetch("/mma/getMmaLeaderboard")
       .then((res) => res.json())
       .then((data) => setLeaders(Array.isArray(data) ? data : []))
       .catch((err) => {

@@ -1,6 +1,7 @@
 "use client";
 import Header from "../Components/Header";
 import Footer from "../Components/Footer"
+import { apiFetch } from "../../lib/api.client";
 
 export default function Home() {
 
@@ -30,7 +31,7 @@ export default function Home() {
       },
     };
 
-    await fetch("http://localhost:3001/mma/postMmaMatch", {
+    await apiFetch("/mma/postMmaMatch", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),

@@ -3,6 +3,7 @@
 import Header from "../Components/Header";
 import Footer from "../Components/Footer"
 import { useEffect, useState } from "react";
+import { apiFetch } from "../../lib/api.client";
 
 export default function Home() {
   const [matches, setMatches] = useState(null);
@@ -17,7 +18,7 @@ export default function Home() {
   };
 
   useEffect(() => {
-    fetch("http://localhost:3001/pool/getPoolMatches")
+    apiFetch("/pool/getPoolMatches")
       .then(res => res.json())
       .then(data => setMatches(data))
       .catch(err => console.error(err));

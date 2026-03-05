@@ -3,12 +3,13 @@
 import Header from "../Components/Header";
 import Footer from "../Components/Footer"
 import { useEffect, useState } from "react";
+import { apiFetch } from "../../lib/api.client";
 
 export default function Home() {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:3001/mma/getMmaMatches")
+    apiFetch("/mma/getMmaMatches")
       .then(res => res.json())
       .then(data => setData(data))
       .catch(err => console.error(err));
