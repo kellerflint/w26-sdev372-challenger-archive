@@ -10,6 +10,8 @@ export default function Home() {
     const formData = new FormData(e.target);
 
     const data = {
+      matchDate: formData.get("matchDate"),
+      location: formData.get("matchLocation"),
       fighterOne: {
         name: formData.get("fighterOneName"),
         headHits: Number(formData.get("fighterOneHead")),
@@ -28,7 +30,7 @@ export default function Home() {
       },
     };
 
-    await fetch("http://localhost:3001/matches/mmaMatches", {
+    await fetch("http://localhost:3001/mma/postMmaMatch", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -43,24 +45,39 @@ export default function Home() {
       <h1>MMA Form</h1>
 
       <form onSubmit={handleSubmit}>
-        <div class="player-form-div">
-          <div class="player-form">
-            <h3>Fighter One</h3>
-            <input name="fighterOneName" placeholder="Name" />
-            <input name="fighterOneHead" type="number" placeholder="Head Hits" />
-            <input name="fighterOneBody" type="number" placeholder="Body Hits" />
-            <input name="fighterOneDodges" type="number" placeholder="Dodges" />
-            <input name="fighterOneBlocks" type="number" placeholder="Blocks" />
-            <input name="fighterOneNotes" placeholder="Notes" />
+        <div className="pool-form-body">
+          <div className="match-details">
+            <h3>Match Details</h3>
+            <div className="match-fields">
+              <div className="match-field">
+                <label htmlFor="matchDate">Date &amp; Time</label>
+                <input id="matchDate" name="matchDate" type="datetime-local" required />
+              </div>
+              <div className="match-field">
+                <label htmlFor="matchLocation">Location</label>
+                <input id="matchLocation" name="matchLocation" placeholder="Location" required />
+              </div>
+            </div>
           </div>
-          <div class="player-form">
-            <h3>Fighter Two</h3>
-            <input name="fighterTwoName" placeholder="Name" />
-            <input name="fighterTwoHead" type="number" placeholder="Head Hits" />
-            <input name="fighterTwoBody" type="number" placeholder="Body Hits" />
-            <input name="fighterTwoDodges" type="number" placeholder="Dodges" />
-            <input name="fighterTwoBlocks" type="number" placeholder="Blocks" />
-            <input name="fighterTwoNotes" placeholder="Notes" />
+          <div className="player-form-div">
+            <div className="player-form">
+              <h3>Fighter One</h3>
+              <input name="fighterOneName" placeholder="Name" />
+              <input name="fighterOneHead" type="number" placeholder="Head Hits" />
+              <input name="fighterOneBody" type="number" placeholder="Body Hits" />
+              <input name="fighterOneDodges" type="number" placeholder="Dodges" />
+              <input name="fighterOneBlocks" type="number" placeholder="Blocks" />
+              <input name="fighterOneNotes" placeholder="Notes" />
+            </div>
+            <div className="player-form">
+              <h3>Fighter Two</h3>
+              <input name="fighterTwoName" placeholder="Name" />
+              <input name="fighterTwoHead" type="number" placeholder="Head Hits" />
+              <input name="fighterTwoBody" type="number" placeholder="Body Hits" />
+              <input name="fighterTwoDodges" type="number" placeholder="Dodges" />
+              <input name="fighterTwoBlocks" type="number" placeholder="Blocks" />
+              <input name="fighterTwoNotes" placeholder="Notes" />
+            </div>
           </div>
         </div>
         <button type="submit" className="link-buttons">Submit</button>

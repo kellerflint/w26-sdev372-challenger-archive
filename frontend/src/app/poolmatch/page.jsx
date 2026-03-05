@@ -6,21 +6,24 @@ import { useEffect, useState } from "react";
 
 export default function Home() {
   const [matches, setMatches] = useState(null);
-  const [stats, setStats] = useState(null);
+
+  const formatMatchDate = (value) => {
+    if (!value) return "TBD";
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.getTime())) return value;
+    const dateOptions = { month: "2-digit", day: "2-digit", year: "numeric" };
+    const timeOptions = { hour: "numeric", minute: "2-digit" };
+    return `${parsed.toLocaleDateString("en-US", dateOptions)} • ${parsed.toLocaleTimeString("en-US", timeOptions)}`;
+  };
 
   useEffect(() => {
-    fetch("http://localhost:3001/players/poolGames")
+    fetch("http://localhost:3001/pool/getPoolMatches")
       .then(res => res.json())
       .then(data => setMatches(data))
       .catch(err => console.error(err));
-
-    fetch("http://localhost:3001/players/odds")
-      .then(res => res.json())
-      .then(data => setStats(data))
-      .catch(err => console.error(err));
   }, []);
 
-  if (!matches || !stats) {
+  if (!matches) {
     return <div>Loading...</div>;
   }
 
@@ -37,20 +40,18 @@ export default function Home() {
               <p><strong>Player Two: </strong>{match.playerTwo}</p>
               <p><strong>Player One Score: </strong>{match.playerOneScore}</p>
               <p><strong>Player Two Score: </strong>{match.playerTwoScore}</p>
-              <p><strong>Match Date: </strong>{match.matchDate}</p>
+              <p><strong>Player One Attempts: </strong>{match.playerOneShotAtt ?? "—"}</p>
+              <p><strong>Player Two Attempts: </strong>{match.playerTwoShotAtt ?? "—"}</p>
+              <p><strong>Player One Pot: </strong>{match.playerOneShotPot ?? "—"}</p>
+              <p><strong>Player Two Pot: </strong>{match.playerTwoShotPot ?? "—"}</p>
+              <p><strong>Player One Errors: </strong>{match.playerOneErrors ?? "—"}</p>
+              <p><strong>Player Two Errors: </strong>{match.playerTwoErrors ?? "—"}</p>
+              <p><strong>Player One Safeties: </strong>{match.playerOneSafeties ?? "—"}</p>
+              <p><strong>Player Two Safeties: </strong>{match.playerTwoSafeties ?? "—"}</p>
+              <p><strong>Match Date: </strong>{formatMatchDate(match.matchDate)}</p>
+              {match.location && <p><strong>Location: </strong>{match.location}</p>}
             </div>
           ))}
-        </div>
-
-        <h2>Mock Stats</h2>
-        <div className="matches-class stats-card">
-          <p>Message: {stats.message}</p>
-          <p>shotAtt: {stats.shotAtt}</p>
-          <p>shotPot: {stats.shotPot}</p>
-          <p>errors: {stats.errors}</p>
-          <p>effSafety: {stats.effSafety}</p>
-          <p><strong>pWin:</strong> {stats.pWin}%</p>
-          <p>Status: {stats.status}</p>
         </div>
       </main>
       <Footer />

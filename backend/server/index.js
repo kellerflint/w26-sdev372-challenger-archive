@@ -3,16 +3,16 @@ import cors from 'cors'
 import dotenv from "dotenv"
 dotenv.config()
 
-import matchesRouter from './routes/matchesRouter.js'
-import playerRouter from './routes/playerRouter.js'
+import mmaRouter from './routes/mmaRouter.js'
+import poolRouter from './routes/poolRouter.js'
 
 const app = express();
 const PORT = 3001;
 
 app.use(cors());
 app.use(express.json());
-app.use("/matches", matchesRouter);
-app.use("/players", playerRouter);
+app.use("/mma", mmaRouter);
+app.use("/pool", poolRouter);
 
 app.get("/", (req, res) => {
     fetch("https://www.thesportsdb.com/api/v2/examples/all_sports.json", {

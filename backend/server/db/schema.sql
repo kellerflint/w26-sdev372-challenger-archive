@@ -1,10 +1,9 @@
-CREATE DATABASE IF NOT EXISTS challengerArchive;
-USE challengerArchive;
+CREATE DATABASE IF NOT EXISTS challengerarchive;
+USE challengerarchive;
 
 CREATE TABLE IF NOT EXISTS poolPlayers(
     playerId INT AUTO_INCREMENT PRIMARY KEY,
     firstName VARCHAR(100) NOT NULL,
-    lastName VARCHAR(100) NOT NULL,
     win INT,
     loss INT
 );
@@ -18,11 +17,18 @@ CREATE TABLE IF NOT EXISTS mmaFighters(
 CREATE TABLE IF NOT EXISTS mmaMatches (
     matchId INT AUTO_INCREMENT PRIMARY KEY,
     matchFighters VARCHAR(100) NOT NULL,
-    headHits INT,
-    bodyHits INT,
-    dodges INT,
-    blocks INT,
-    notes VARCHAR(300),
+    fighterOneHeadHits INT,
+    fighterTwoHeadHits INT,
+    fighterOneBodyHits INT,
+    fighterTwoBodyHits INT,
+    fighterOneDodges INT,
+    fighterTwoDodges INT,
+    fighterOneBlocks INT,
+    fighterTwoBlocks INT,
+    fighterOneNotes VARCHAR(300),
+    fighterTwoNotes VARCHAR(300),
+    matchDate DATETIME,
+    location VARCHAR(255),
 
     fighterOneId INT,
     fighterTwoId INT,
