@@ -1,9 +1,15 @@
 "use client";
 
 import Header from "../Components/Header";
+import Footer from "../Components/Footer"
+import { apiFetch } from "../../lib/api.client";
 
 export default function Home() {
-    function handleSubmit(formData) {
+    async function handleSubmit(e) {
+        e.preventDefault();
+
+        const formData = new FormData(e.target);
+
         const playerOne = {
             name: formData.get("playerone"),
             score: Number(formData.get("playeronescore")),
@@ -23,50 +29,77 @@ export default function Home() {
         const data = {
             playerOne: playerOne,
             playerTwo: playerTwo,
+            matchDate: formData.get("matchdate"),
+            location: formData.get("location"),
         }
-        console.log(data);
 
-        return data;
+        try {
+            const response = await apiFetch("/pool", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            });
+
+            const payload = response.json ? await response.json().catch(() => null) : null;
+            if (!response.ok) {
+                const errorMessage = payload?.error ?? 'Unable to save pool match at this time.';
+                alert(errorMessage);
+                return;
+            }
+
+            alert("Pool Match Saved!");
+        } catch (error) {
+            console.error(error);
+            alert("Unable to save pool match. Please try again.");
+        }
     }
-  return (
-    <>
-      <Header />
-      <h1>Pool Form</h1>
-      <form onSubmit={handleSubmit}>
-        <div class="player-form-div">
-            <div class="player-form">
-            <p>Player One</p>
-                <label for="playerone">Name: </label>
-                    <input type="text" id="playerone" name="playerone"></input>
-                <label for="playeronescore">Score: </label>
-                    <input type="number" id="playeronescore" name="playeronescore"></input>
-                <label>Made Balls</label>
-                    <input type="number" id="playeronemade" name="playeronemade"></input>
-                <label>Attempted Balls</label>
-                    <input type="number" id="playeroneatt" name="playeroneatt"></input>
-                <label>Errors</label>
-                    <input type="number" id="playeroneerr" name="playeroneerr"></input>
-                <label>Safeties</label>
-                    <input type="number" id="playeronesafe" name="playeronesafe"></input>
-            </div>
-            <div class="player-form">
-            <p>Player Two</p>
-                <label for="playertwo">Name: </label>
-                    <input type="text" id="playertwo" name="playertwo"></input>
-                <label for="playertwoscore">Score: </label>
-                    <input type="number" id="playertwoscore" name="playertwoscore"></input>
-                <label>Made Balls</label>
-                    <input type="number" id="playertwomade" name="playertwomade"></input>
-                <label>Attempted Balls</label>
-                    <input type="number" id="playertwoatt" name="playertwoatt"></input>
-                <label>Errors</label>
-                    <input type="number" id="playertwoerr" name="playertwoerr"></input>
-                <label>Safeties</label>
-                    <input type="number" id="playertwosafe" name="playertwosafe"></input>
-            </div>
-        </div>
-        <button type="submit">Submit</button>
-      </form>
-    </>
-  );
+    return (
+        <>
+            <Header />
+            <h1>PoolForm</h1>
+            <form onSubmit={handleSubmit}>
+                <div className="pool-form-body">
+                    <div className="match-details">
+                        <h3>Match Details</h3>
+                        <div className="match-fields">
+                            <div className="match-field">
+                                <label htmlFor="matchdate">Date &amp; Time</label>
+                                <input name="matchdate" type="datetime-local" id="matchdate" required />
+                            </div>
+                            <div className="match-field">
+                                <label htmlFor="location">Location</label>
+                                <input name="location" type="text" id="location" placeholder="Location" required />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="player-form-div">
+                        <div className="player-form">
+                            <h3>Player One</h3>
+                            <input name="playerone" placeholder="Name" />
+                            <input name="playeronescore" type="number" placeholder="Score" />
+                            <input name="playeronemade" type="number" placeholder="Made Balls" />
+                            <input name="playeroneatt" type="number" placeholder="Attempted Balls" />
+                            <input name="playeroneerr" type="number" placeholder="Errors" />
+                            <input name="playeronesafe" type="number" placeholder="Safeties" />
+                        </div>
+
+                        <div className="player-form">
+                            <h3>Player Two</h3>
+                            <input name="playertwo" placeholder="Name" />
+                            <input name="playertwoscore" type="number" placeholder="Score" />
+                            <input name="playertwomade" type="number" placeholder="Made Balls" />
+                            <input name="playertwoatt" type="number" placeholder="Attempted Balls" />
+                            <input name="playertwoerr" type="number" placeholder="Errors" />
+                            <input name="playertwosafe" type="number" placeholder="Safeties" />
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" className="link-buttons">Submit</button>
+            </form>
+            <Footer />
+        </>
+    );
 }

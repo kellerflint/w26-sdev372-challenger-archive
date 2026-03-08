@@ -1,15 +1,20 @@
 services:
   db:
-    image: mysql:latest
+    image: mysql:8.4
     environment:
       MYSQL_ROOT_PASSWORD: MbE62o3mB
-      MYSQL_DATABASE: challengerArchive
+      MYSQL_DATABASE: challengerarchive
       MYSQL_USER: snguru
       MYSQL_PASSWORD: MbE62o3mB
     ports:
       - "3310:3306"
-    volumes:
-      - db_data:/var/lib/mysql
+    tmpfs:
+      - /var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-P", "3306", "-u", "root", "-pMbE62o3mB"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
   backend:
     build: ./backend/server
@@ -17,18 +22,25 @@ services:
       - "3001:3001"
     environment:
       DB_HOST: db
+      DB_PORT: 3306
       DB_USER: snguru
       DB_PASSWORD: MbE62o3mB
-      DB_NAME: challengerArchive
+      DB_NAME: challengerarchive
+      DB_ADMIN_USER: root
+      DB_ADMIN_PASSWORD: MbE62o3mB
+      DB_AUTO_RELOAD: "true"
     depends_on:
-      - db
+      db: 
+        condition: service_healthy
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        NEXT_PUBLIC_API_URL: http://backend:3001
     ports:
       - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://backend:3001
     depends_on:
       - backend
-
-volumes:
-  db_data:
