@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "vitest run",
+    "docker:test": "RUN_MMA_INTEGRATION=true npm test",
     "start": "node index.js",
     "dev": "nodemon index.js",
     "db:reload": "node scripts/reloadDb.js",
@@ -20,7 +21,6 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.11",
-    "supertest": "^7.2.2",
     "vitest": "^4.0.18"
   }
 }

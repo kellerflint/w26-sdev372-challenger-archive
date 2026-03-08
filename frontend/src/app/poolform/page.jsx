@@ -33,15 +33,27 @@ export default function Home() {
             location: formData.get("location"),
         }
 
-        await apiFetch("/pool", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-        });
+        try {
+            const response = await apiFetch("/pool", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            });
 
-        alert("Pool Match Saved!");
+            const payload = response.json ? await response.json().catch(() => null) : null;
+            if (!response.ok) {
+                const errorMessage = payload?.error ?? 'Unable to save pool match at this time.';
+                alert(errorMessage);
+                return;
+            }
+
+            alert("Pool Match Saved!");
+        } catch (error) {
+            console.error(error);
+            alert("Unable to save pool match. Please try again.");
+        }
     }
     return (
         <>

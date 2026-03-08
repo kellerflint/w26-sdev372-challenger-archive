@@ -8,12 +8,26 @@ import { apiFetch } from "../../lib/api.client";
 
 export default function Home() {
   const [leaders, setLeaders] = useState(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    apiFetch("/pool/getPoolLeaderboard")
-      .then((res) => res.json())
-      .then((data) => setLeaders(data))
-      .catch((err) => console.error(err));
+    async function loadLeaderboard() {
+      try {
+        const res = await apiFetch("/pool/getPoolLeaderboard");
+        const payload = await res.json().catch(() => null);
+        if (!res.ok) {
+          throw new Error(payload?.error ?? "Failed to load leaderboard.");
+        }
+        setLeaders(Array.isArray(payload) ? payload : []);
+        setError("");
+      } catch (err) {
+        console.error(err);
+        setError(err?.message ?? "Unable to load leaderboard.");
+        setLeaders([]);
+      }
+    }
+
+    loadLeaderboard();
   }, []);
 
   const formatMatchDate = (value) => {
@@ -44,6 +58,11 @@ export default function Home() {
       <main className="page-container">
         <h1>PoolBoard</h1>
         <div className="match-cards-list">
+          {error && (
+            <p className="error-text" role="status">
+              {error}
+            </p>
+          )}
           {leaders.map((leader, index) => {
             const match = leader.recentMatch;
             const winPct = Math.round((leader.winPct ?? 0) * 100);

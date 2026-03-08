@@ -13,18 +13,31 @@ app.use(express.json());
 app.use('/mma', mmaRouter);
 app.use('/pool', poolRouter);
 
-app.get('/', (req, res) => {
-  fetch('https://www.thesportsdb.com/api/v2/examples/all_sports.json', {
-    headers: { Accept: 'application/JSON' },
-  })
-    .then((r) => r.json())
-    .then((dataFromMyJSON) => {
-      console.log(dataFromMyJSON.all[2].strSport);
-      res.send({
-        sport: dataFromMyJSON.all[2].strSport,
-        sportPic: dataFromMyJSON.all[3].strSportThumb,
-      });
+app.get('/', async (req, res) => {
+  try {
+    const response = await fetch('https://www.thesportsdb.com/api/v2/examples/all_sports.json', {
+      headers: { Accept: 'application/JSON' },
     });
+
+    if (!response.ok) {
+      throw new Error(`Sports metadata fetch failed with status ${response.status}`);
+    }
+
+    const dataFromMyJSON = await response.json();
+
+    if (!Array.isArray(dataFromMyJSON?.all) || dataFromMyJSON.all.length < 4) {
+      throw new Error('Sports metadata payload was missing expected data');
+    }
+
+    console.log(dataFromMyJSON.all[2].strSport);
+    res.send({
+      sport: dataFromMyJSON.all[2].strSport,
+      sportPic: dataFromMyJSON.all[3].strSportThumb,
+    });
+  } catch (error) {
+    console.error('SPORTS METADATA ERROR:', error);
+    res.status(502).send({ error: 'Unable to load sports metadata at this time.' });
+  }
 });
 
 export default app;

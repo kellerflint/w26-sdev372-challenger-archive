@@ -31,13 +31,25 @@ export default function Home() {
       },
     };
 
-    await apiFetch("/mma/postMmaMatch", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
+    try {
+      const response = await apiFetch("/mma/postMmaMatch", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
 
-    alert("MMA Match Saved!");
+      const payload = response.json ? await response.json().catch(() => null) : null;
+      if (!response.ok) {
+        const errorMessage = payload?.error ?? 'Unable to save MMA match at this time.';
+        alert(errorMessage);
+        return;
+      }
+
+      alert("MMA Match Saved!");
+    } catch (error) {
+      console.error(error);
+      alert("Unable to save MMA match. Please try again.");
+    }
   }
 
   return (

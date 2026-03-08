@@ -218,6 +218,13 @@ footer {
   margin: 30px auto;
 }
 
+.error-text {
+  color: #b00020;
+  font-weight: 600;
+  text-align: center;
+  margin: 0 auto 10px;
+}
+
 .link-buttons {
   display: inline-block;
   text-decoration: none;
