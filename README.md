@@ -1,28 +1,63 @@
-# Project-Plans
 ## Project Overview
+
 ### Challenger Archive
-- **Problem Statement:** In an individual sport (or one on one) it forces you to
-focus, adapt, and remember aspects of your opponent and their unique style of how
-they play the game. The longer you play the game the more oppenents you are forced
-to memorize and at some point it becomes a hassle trying to remember what someone
-you played against weeks/months/years ago. This website gives the user the
-opportunity to record aspects of their opponents physicality, styles, and
-attributes as their own personal record to improve in the future.
-- **Target Users:** Pool players, MMA fighters, other sports (if we have time)
+
+- **Problem Statement:** Casual pool and MMA competitors struggle to keep match notes organized. Challenger Archive stores each encounter so they can quickly revisit what happened.
+- **Target Users:** Recreational players who want a lightweight way to log locations, stats, and outcomes for future reference.
+
 ## Feature Breakdown
-- **MVP Features:** Core functionality we could implement are giving the user two
-options for sports they play between pool and mma and some form of a user login to
-a unique database for each user to record their specifc opponents
-- **Extended Features:** Some additional features could be adding different sports
-such as fencing, tennis, gymnastics etc. Also adding features like adding video of
-a previous game you've played against them to see how you can improve your own
-flaws. Win percentage?
+
+- **MVP Features:** submit pool or MMA match data (names, stats, date/time, location), persist wins/losses/notes, and view leaderboards plus match history.
+- **Extended Features:** TBD
+
 ## Data Model Planning
-- **Core Entities:** Strings, Numbers (to keep track of win/loss records),
-(potentially videos)
-- **Key Relationships:** Information about an opponent as reminders for the next
-time you ever go against them in the future
+
+- **Core Entities:**  
+  - **Players/Fighters:** store basic identity (first name) along with win/loss totals (pool) or notes/metrics (MMA) so each participant’s record can be ranked.  
+  - **Pool Games:** persist player IDs, scores, attempts/pots/errors/safeties, plus match metadata (date/time, location).  
+  - **MMA Matches:** store fighter IDs, detail stats (head/body hits, dodges, blocks), notes for each side, and metadata (date, location).
+- **Key Relationships:** pool games link to `poolPlayers` via `playerOneId`/`playerTwoId`; MMA matches point at `mmaFighters` the same way. Leaderboard queries join matches back to the player/fighter tables to surface the most recent match and aggregate win/metric totals for each record.
+
+## Prerequisites & Setup
+
+- Install Node.js and MySQL locally (or rely on Docker Compose).  
+- Copy `backend/server/.env.example` to `.env` if running locally and update credentials/ports to match your MySQL instance.  
+- Run `npm install` in `backend/server` and `frontend`.  
+- Execute `npm run db:reload` from `backend/server` to recreate the schema/seed data before starting the server.  
+- Start the backend with `npm run dev` (listens on `http://localhost:3001`) and the frontend with `npm run dev` inside the `frontend` directory (`http://localhost:3000`).
+
 ## User Experience
-- **User Flows:** User logs in -> Picks their prefered sport ->
-- (if they picked mma) weight class estimate, height estimate, wins/losses,
-strength/weaknesses
+
+- **User Flows:**  
+  1. Record a match via the pool or MMA form (stats, notes, date, location).  
+  2. Check the leaderboard for ranked players and their latest match.  
+  3. Browse the full match list for detailed breakdowns.
+
+## Docker
+
+- Build and run the full stack with `docker compose up --build` from the repo root. Compose passes `NEXT_PUBLIC_API_URL=http://backend:3001` as a build arg and runtime env so the production frontend bundle targets the backend service name inside the Docker network.  
+- The stack brings up MySQL, waits for the database healthcheck, runs `npm run db:reload` via the backend entrypoint (`scripts/docker-entrypoint.sh`), and then starts the Express server and Next frontend.  
+- Backend API is available on `http://localhost:3001`; frontend is `http://localhost:3000`. If you rebuild manually, remember to pass `NEXT_PUBLIC_API_URL` into the frontend build phase (`docker compose build` already does this for you).
+
+## Available Scripts
+
+- Backend (`backend/server`):  
+  - `npm run dev` – starts Express with nodemon.  
+  - `npm run db:reload` – drops and recreates the schema, seeds data, and recalculates pool win/loss totals.  
+- Frontend (`frontend`):  
+  - `npm run dev` – launches Next dev server.  
+  - `npm run build` – builds the production bundle.  
+  - `npm run start` – serves the production build.
+
+## Architecture Notes
+
+- Two feature paths (Pool vs. MMA) each have dedicated controllers/routes on the backend (`poolController.js`, `mmaController.js`).  
+- Leaderboards combine aggregate stats with the most recent match per player/fighter before sending JSON to the frontend.  
+- Frontend pages call `/pool/getPoolMatches`, `/pool/getPoolLeaderboard`, `/mma/getMmaMatches`, and `/mma/getMmaLeaderboard` and render cards for each match/leader.
+
+## Testing & QA
+
+- Backend tests: `cd backend/server && npm test` runs the Vitest suite that mocks the Sequelize layer and exercises the pool/MMA controllers.  
+- Frontend tests: `cd frontend && npm test` runs Vitest in JSDOM, covering the Header, MMA form, and placeholder cards.  
+- The API still exposes the root `/` route that proxies a sports metadata call with resilience to failures; running the backend tests or starting the server manually is the best way to confirm the new error-handling behavior. You can also use the existing UI forms to exercise the leaderboards/match endpoints after seeding the database.
+- **Dockerized testing:** to validate the suites against the containerized MySQL, run `docker compose up --build` (this seeds the database via the backend entrypoint). With the stack healthy, execute `docker compose run --rm backend npm run docker:test`; this script sets `RUN_MMA_INTEGRATION=true` so the MMA route integration tests execute against the Dockerized DB. If you also want to exercise the frontend tests inside Docker, run `docker compose run --rm frontend npm test`. When finished, `docker compose down` tears down the stack.
