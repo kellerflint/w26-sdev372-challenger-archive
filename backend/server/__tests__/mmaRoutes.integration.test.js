@@ -21,7 +21,6 @@ const runIntegrationTests = process.env.RUN_MMA_INTEGRATION === 'true';
 
 function registerIntegrationTests() {
 
-  // GET /mma/getMmaMatches
   describe('GET /mma/getMmaMatches', () => {
     beforeEach(() => vi.clearAllMocks());
 
@@ -47,7 +46,6 @@ function registerIntegrationTests() {
     });
   });
 
-  // POST /mma/postMmaMatch
   describe('POST /mma/postMmaMatch', () => {
     beforeEach(() => vi.clearAllMocks());
 
@@ -77,9 +75,9 @@ function registerIntegrationTests() {
     });
 
     it('responds 201 and saves the match end-to-end', async () => {
-      mockDb.query.mockResolvedValueOnce([{ fighterId: 1 }]); // find Alice
-      mockDb.query.mockResolvedValueOnce([{ fighterId: 2 }]); // find Bob
-      mockDb.query.mockResolvedValueOnce([[1]]);               // INSERT
+      mockDb.query.mockResolvedValueOnce([{ fighterId: 1 }]); 
+      mockDb.query.mockResolvedValueOnce([{ fighterId: 2 }]); 
+      mockDb.query.mockResolvedValueOnce([[1]]);               
 
       const res = await request(app)
         .post('/mma/postMmaMatch')
