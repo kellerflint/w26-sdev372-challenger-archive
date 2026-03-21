@@ -11,13 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: docker compose run --rm backend npm run docker:test
+      - run: docker compose run --rm backend npm run test:integration
 
   frontend-unit:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: docker build --target build -t client-test ./client
+      - run: docker build --target build -t client-test ./frontend
       - run: docker compose run --rm frontend npm test
 
   integration:
@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: docker compose run --rm server npm run test:integration
+      - run: docker compose run --rm backend npm run test:integration
 
   e2e:
     needs: [integration]
@@ -40,6 +40,6 @@ jobs:
             sleep 2
           done
       - run: docker build -t e2e-test ./e2e
-      - run: docker run --rm --network ci-cd-demo_default -e BASE_URL=http://client:80 e2e-test
+      - run: docker run --rm --network w26-sdev372-challenger-archive_default -e BASE_URL=http://frontend:3000 e2e-test
       - run: docker compose down
         if: always()
