@@ -39,8 +39,9 @@ describe('MMAForm page', () => {
 
   it('calls apiFetch with the correct payload on submit', async () => {
     const user = userEvent.setup();
+    
+    window.alert = () => {};
     vi.spyOn(window, 'alert').mockImplementation(() => {});
-
     render(<MMAFormPage />);
 
     const [nameOne, nameTwo] = screen.getAllByPlaceholderText(/^name$/i);

@@ -6,14 +6,21 @@ import { useEffect, useState } from "react";
 import { apiFetch } from "../../lib/api.client";
 
 export default function Home() {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
 
-  useEffect(() => {
-    apiFetch("/mma/getMmaMatches")
-      .then(res => res.json())
-      .then(data => setData(data))
-      .catch(err => console.error(err));
-  }, []);
+useEffect(() => {
+  apiFetch("/mma/getMmaMatches")
+    .then(res => res.json())
+    .then(data => {
+      if (Array.isArray(data)) {
+        setData(data);
+      } else {
+        console.error("Odd response taken from MMA API:", data);
+        setData([]);
+      }
+    })
+    .catch(err => console.error(err));
+}, []);
 
   const formatMatchDate = (value) => {
     if (!value) return "TBD";
@@ -24,7 +31,7 @@ export default function Home() {
     return `${parsed.toLocaleDateString("en-US", dateOptions)} • ${parsed.toLocaleTimeString("en-US", timeOptions)}`;
   };
 
-  if (!data) {
+  if (data.length === 0) {
     return <div>Loading...</div>;
   }
 
@@ -55,10 +62,8 @@ export default function Home() {
             </div>
           ))}
         </div>
-
       </main>
       <Footer />
     </>
   );
-
 }
