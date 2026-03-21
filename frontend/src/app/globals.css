@@ -79,9 +79,16 @@ footer {
 
 #hero-title {
   margin-bottom: 0;
+  font-size: 4em;
+}
+
+#hero-step {
+  font-size: 1em;
+  font-weight: bold;
 }
 
 #hero-desc {
+  font-size: 1em;
   margin-top: 0;
   font-style: italic;
 }
@@ -98,6 +105,14 @@ footer {
 .homepage-images {
   display: flex;
   justify-content: center;
+  align-items: center;
+  gap: 40px;
+  margin-top: 20px;
+}
+
+.step-images {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
   gap: 40px;
   margin-top: 20px;
