@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: docker compose run --rm backend npm run test:integration
+      - run: docker compose run --rm backend npm run docker:test
 
   frontend-unit:
     runs-on: ubuntu-latest
