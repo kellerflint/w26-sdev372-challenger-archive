@@ -1,6 +1,4 @@
 import { vi, describe, it, expect, beforeEach } from 'vitest';
-import { Readable, Writable } from 'node:stream';
-import { EventEmitter } from 'node:events';
 
 const { mockDb, mockTransaction } = vi.hoisted(() => {
   const mockTransaction = {
@@ -17,136 +15,13 @@ const { mockDb, mockTransaction } = vi.hoisted(() => {
 vi.mock('../db/db.js', () => ({ default: mockDb }));
 
 import app from '../app.js';
+import request from 'supertest';
 
 const runIntegrationTests = process.env.RUN_MMA_INTEGRATION === 'true';
 
 function registerIntegrationTests() {
-  class MockRequest extends Readable {
-    constructor({ method, url, body }) {
-      super();
-      this.method = method;
-      this.url = url;
-      this.headers = body ? { 'content-type': 'text/plain' } : {};
-      this.body = body ?? undefined;
-      this.socket = new EventEmitter();
-      this.connection = this.socket;
-    }
-
-    _read() {
-      this.push(null);
-    }
-
-    get(name) {
-      return this.headers?.[name.toLowerCase()];
-    }
-  }
-
-  function createMockRequest({ method, url, body }) {
-    return new MockRequest({ method, url, body });
-  }
-
-  class MockResponse extends Writable {
-    constructor() {
-      super();
-      this.statusCode = 200;
-      this.headers = {};
-      this.chunks = [];
-      this.headersSent = false;
-    }
-
-    _write(chunk, encoding, callback) {
-      this.chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk, encoding));
-      callback();
-    }
-
-    setHeader(name, value) {
-      this.headers[name.toLowerCase()] = value;
-    }
-
-    getHeader(name) {
-      return this.headers[name.toLowerCase()];
-    }
-
-    removeHeader(name) {
-      delete this.headers[name.toLowerCase()];
-    }
-
-    writeHead(statusCode, headers = {}) {
-      this.statusCode = statusCode;
-      Object.entries(headers).forEach(([key, value]) => this.setHeader(key, value));
-    }
-
-    status(code) {
-      this.statusCode = code;
-      return this;
-    }
-
-    json(payload) {
-      if (!this.headers['content-type']) {
-        this.setHeader('content-type', 'application/json');
-      }
-      this.send(payload);
-      return this;
-    }
-
-    send(payload) {
-      if (payload === undefined) {
-        super.end();
-        return this;
-      }
-
-      const chunk = typeof payload === 'object' ? JSON.stringify(payload) : String(payload);
-      if (!this.headers['content-type'] && typeof payload === 'object') {
-        this.setHeader('content-type', 'application/json');
-      }
-      super.write(chunk, 'utf8', () => {});
-      super.end();
-      this.headersSent = true;
-      return this;
-    }
-
-    write(chunk, encoding, callback) {
-      this.headersSent = true;
-      return super.write(chunk, encoding, callback);
-    }
-
-    end(chunk) {
-      if (chunk !== undefined) {
-        super.write(chunk, 'utf8', () => {});
-      }
-      super.end();
-    }
-
-    flushHeaders() {
-      this.headersSent = true;
-    }
-
-    _getJSONData() {
-      const buffer = Buffer.concat(this.chunks);
-      const text = buffer.toString('utf8');
-      if (!text) return null;
-      try {
-        return JSON.parse(text);
-      } catch {
-        return text;
-      }
-    }
-  }
-
-  async function sendRequest({ method, url, body }) {
-    const req = createMockRequest({ method, url, body });
-    const res = new MockResponse();
-
-    await new Promise((resolve) => {
-      res.once('finish', () => resolve(res));
-      app.handle(req, res);
-    });
-
-    return res;
-  }
 
   // GET /mma/getMmaMatches
-
   describe('GET /mma/getMmaMatches', () => {
     beforeEach(() => vi.clearAllMocks());
 
@@ -156,24 +31,23 @@ function registerIntegrationTests() {
       ];
       mockDb.query.mockResolvedValueOnce(fakeMatches);
 
-      const res = await sendRequest({ method: 'GET', url: '/mma/getMmaMatches' });
+      const res = await request(app).get('/mma/getMmaMatches');
 
       expect(res.statusCode).toBe(200);
-      expect(res._getJSONData()).toEqual(fakeMatches);
+      expect(res.body).toEqual(fakeMatches);
     });
 
     it('responds 500 when the database fails', async () => {
       mockDb.query.mockRejectedValueOnce(new Error('DB down'));
 
-      const res = await sendRequest({ method: 'GET', url: '/mma/getMmaMatches' });
+      const res = await request(app).get('/mma/getMmaMatches');
 
       expect(res.statusCode).toBe(500);
-      expect(res._getJSONData()).toEqual({ error: 'Failed to fetch MMA matches' });
+      expect(res.body).toEqual({ error: 'Failed to fetch MMA matches' });
     });
   });
 
-  // POST /mma/postMmaMatch 
-
+  // POST /mma/postMmaMatch
   describe('POST /mma/postMmaMatch', () => {
     beforeEach(() => vi.clearAllMocks());
 
@@ -185,25 +59,21 @@ function registerIntegrationTests() {
     };
 
     it('responds 400 when a fighter name is missing', async () => {
-      const res = await sendRequest({
-        method: 'POST',
-        url: '/mma/postMmaMatch',
-        body: { ...validBody, fighterOne: { name: '' } },
-      });
+      const res = await request(app)
+        .post('/mma/postMmaMatch')
+        .send({ ...validBody, fighterOne: { name: '' } });
 
       expect(res.statusCode).toBe(400);
-      expect(res._getJSONData()).toEqual({ error: 'Both fighter names are required.' });
+      expect(res.body).toEqual({ error: 'Both fighter names are required.' });
     });
 
     it('responds 400 when location is missing', async () => {
-      const res = await sendRequest({
-        method: 'POST',
-        url: '/mma/postMmaMatch',
-        body: { ...validBody, location: '' },
-      });
+      const res = await request(app)
+        .post('/mma/postMmaMatch')
+        .send({ ...validBody, location: '' });
 
       expect(res.statusCode).toBe(400);
-      expect(res._getJSONData()).toEqual({ error: 'Match location is required.' });
+      expect(res.body).toEqual({ error: 'Match location is required.' });
     });
 
     it('responds 201 and saves the match end-to-end', async () => {
@@ -211,14 +81,12 @@ function registerIntegrationTests() {
       mockDb.query.mockResolvedValueOnce([{ fighterId: 2 }]); // find Bob
       mockDb.query.mockResolvedValueOnce([[1]]);               // INSERT
 
-      const res = await sendRequest({
-        method: 'POST',
-        url: '/mma/postMmaMatch',
-        body: validBody,
-      });
+      const res = await request(app)
+        .post('/mma/postMmaMatch')
+        .send(validBody);
 
       expect(res.statusCode).toBe(201);
-      expect(res._getJSONData()).toEqual({ message: 'MMA Match Saved' });
+      expect(res.body).toEqual({ message: 'MMA Match Saved' });
       expect(mockTransaction.commit).toHaveBeenCalled();
     });
 
@@ -227,14 +95,12 @@ function registerIntegrationTests() {
       mockDb.query.mockResolvedValueOnce([{ fighterId: 2 }]);
       mockDb.query.mockRejectedValueOnce(new Error('Insert failed'));
 
-      const res = await sendRequest({
-        method: 'POST',
-        url: '/mma/postMmaMatch',
-        body: validBody,
-      });
+      const res = await request(app)
+        .post('/mma/postMmaMatch')
+        .send(validBody);
 
       expect(res.statusCode).toBe(500);
-      expect(res._getJSONData()).toEqual({ error: 'Failed to save MMA match' });
+      expect(res.body).toEqual({ error: 'Failed to save MMA match' });
       expect(mockTransaction.rollback).toHaveBeenCalled();
     });
   });
