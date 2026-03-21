@@ -8,6 +8,7 @@
     "test": "vitest run",
     "docker:test": "RUN_MMA_INTEGRATION=true npm test",
     "start": "node index.js",
+    "test:integration": "vitest run --config vitest.integration.config.js",
     "dev": "nodemon index.js",
     "db:reload": "node scripts/reloadDb.js",
     "test:watch": "vitest"
