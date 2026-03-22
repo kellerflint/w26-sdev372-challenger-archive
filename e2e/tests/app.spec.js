@@ -5,8 +5,7 @@ test.describe('Home page', () => {
   test('shows the page title and description', async ({ page }) => {
     await page.goto('/');
     await expect(page.getByRole('heading', { name: /challenger archive/i })).toBeVisible();
-    await expect(page.getByText(/Where MMA and Pool Meet./i)).toBeVisible();
-  });
+    await expect(page.getByText(/log, track, and analyze your mma and pool matches/i)).toBeVisible();  });
 
   test('header navigation links are present', async ({ page }) => {
     await page.goto('/');
