@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 // Home page
 test.describe('Home page', () => {
-  test('shows the hero title and description', async ({ page }) => {
+  test('shows the page title and description', async ({ page }) => {
     await page.goto('/');
     await expect(page.getByRole('heading', { name: /challenger archive/i })).toBeVisible();
     await expect(page.getByText(/where mma & pool meet/i)).toBeVisible();
