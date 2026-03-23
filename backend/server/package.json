@@ -8,6 +8,7 @@
     "test": "vitest run",
     "docker:test": "RUN_MMA_INTEGRATION=true npm test",
     "start": "node index.js",
+    "test:integration": "vitest run",
     "dev": "nodemon index.js",
     "db:reload": "node scripts/reloadDb.js",
     "test:watch": "vitest"
@@ -21,6 +22,7 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.11",
+    "supertest": "^7.2.2",
     "vitest": "^4.0.18"
   }
 }
